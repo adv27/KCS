@@ -1,32 +1,32 @@
-import sys
-from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
-from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 import csv
 import io
+import sys
+
 import pyperclip
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.support import expected_conditions as EC  # available since 2.26.0
+from selenium.webdriver.support.ui import WebDriverWait  # available since 2.4.0
 
 PATH_TO_CHROME_DRIVER = r'C:\Users\vdanh\Desktop\robotframework_tuturial\WebDemo\webdriver\Window\chromedriver'
 URL = r'http://192.168.1.1'
 URL_INFORMATION = r'https://192.168.1.1/device_status.cgi'
 keys = ['ProductClass',
-       'Vendor',
-       'SerialNumber',
-       'HardwareVersion',
-       'AdditionalSoftwareVersion',
-       'SoftwareVersion',
-       'X_ASB_COM_Chipset',
-       'lotnumber']
+        'Vendor',
+        'SerialNumber',
+        'HardwareVersion',
+        'AdditionalSoftwareVersion',
+        'SoftwareVersion',
+        'X_ASB_COM_Chipset',
+        'lotnumber']
 
 if len(sys.argv) > 1:
     password = sys.argv[1]
-    #password = '3063581835'
     caps = DesiredCapabilities().CHROME
     caps["marionette"] = True
-    #caps["pageLoadStrategy"] = "normal"  # complete
-    caps["pageLoadStrategy"] = "none"  #  interactive
+    # caps["pageLoadStrategy"] = "normal"  # complete
+    caps["pageLoadStrategy"] = "none"  # interactive
     driver = webdriver.Chrome(executable_path=PATH_TO_CHROME_DRIVER, desired_capabilities=caps)
     driver.get(URL)
     try:
@@ -48,13 +48,10 @@ if len(sys.argv) > 1:
     row = []
     for key in keys:
         row.append(driver.find_element_by_id(key).text)
-    #coping
-    old_stdout = sys.stdout
+    # coping
     result = io.StringIO()
-    sys.stdout = result
-    w = csv.writer(sys.stdout, csv.excel_tab)
+    w = csv.writer(result, csv.excel_tab)
     w.writerow(row)
-    sys.stdout = old_stdout
     data = result.getvalue()
     print('Data: ' + data)
     pyperclip.copy(data)
@@ -63,4 +60,3 @@ if len(sys.argv) > 1:
     driver.quit()
 else:
     print("Wrong argument, please input password!")
-
