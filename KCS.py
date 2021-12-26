@@ -45,9 +45,7 @@ if len(sys.argv) > 1:
         element = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.ID, "ProductClass")))
     finally:
         print("founded: Status")
-    row = []
-    for key in keys:
-        row.append(driver.find_element_by_id(key).text)
+    row = [driver.find_element_by_id(key).text for key in keys]
     # coping
     result = io.StringIO()
     w = csv.writer(result, csv.excel_tab)
